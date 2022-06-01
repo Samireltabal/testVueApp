@@ -1,6 +1,84 @@
 <template>
   <div>
-   <router-view></router-view>
+    <router-link :to="{name:'home'}"> HOME PAGE </router-link>
+    <router-link :to="{name:'order'}"> Orders PAGE </router-link>
+    <div class="row">
+      <div class="col-lg-3">1</div>
+      <div class="col-lg-3">
+          <label for="">item id</label>
+          <input type="text" class="form-control" v-model="itemid">
+          <label for="">item count</label>
+          <input type="text" class="form-control" v-model="itemCountAdd">
+          <div class="form-check form-switch">
+            <label class="form-check-label" for="">is guest ? </label>
+            <input type="checkbox" v-model="guest" class="form-check-input checkbox" name="is guest">
+          </div>
+      </div>
+    </div>
+    <button @click="getProfile" class="btn btn-success mx-2">
+      show profile
+    </button>
+    <button @click="addCart(itemid)" class="btn btn-success mx-2">
+      add to cart
+    </button>
+     <button @click="emptyCart" class="btn btn-warning light mx-2">
+      empty cart
+    </button>
+    <button @click="getCart"  class="btn btn-success mx-2">
+      get cart
+    </button>
+    <button @click="checkout"  class="btn btn-info mx-2">
+      checkout
+    </button>
+    <img alt="Vue logo" src="../assets/logo.png">
+    <div class="row">
+      <div class="col-lg-6" v-if="cartItem.result">
+        <div class="row">
+          <div class="col-lg-6">
+              <h3>Cart ..</h3>
+              <h3>Currency : {{ currency }}</h3>
+              <h3>Total money : {{ cartTotal }}</h3>
+              <h3>total items count : {{ cartItemsCount }}</h3>
+              <h3>different items : {{ cartPieces }}</h3>
+          </div>
+          <div class="col-lg-6">
+              <div v-for="(set, key) in cartItem.result.items" :key="key" class="my-2 mx-2">
+                {{ set.itemDetails.name }} | {{ set.originalPrice }} * {{ set.quantity }} = {{ set.totalPrice}} <br>
+                {{ set.itemDetails.verification_types }}
+                <button @click="removeCart(set.guid)" class="btn btn-danger mx-2"> x </button> 
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="row" v-for="item in services" :key="item.id">
+          <div class="col-lg-12">
+              <small> #{{ item.id }} - {{ item.name }} - {{ item.originalPrice }} <button class="btn btn-success btn-sm mx-2 my-2" @click="addItemById(item.id)">+</button></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="row" v-for="item in services2" :key="item.id">
+          <div class="col-lg-12">
+              <small> #{{ item.id }} - {{ item.name }} - {{ item.originalPrice }} <button class="btn btn-success btn-sm mx-2 my-2" @click="addItemById(item.id)">+</button></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 d-none">
+        <div v-for="(set, key) in addCartItem.result" :key="key">
+          <pre> 
+              {{ set }}
+          </pre>
+        </div>
+      </div>
+      <div class="col-lg-3 d-none">
+        <div v-for="(set, key) in removeCartItem.result" :key="key">
+          <pre>
+            {{ key }} : {{ set }}
+          </pre>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
